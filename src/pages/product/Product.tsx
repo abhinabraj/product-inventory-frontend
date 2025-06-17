@@ -6,6 +6,8 @@ import {
   updateProduct,
   uploadProductImage,
 } from "../../api/product";
+import { Button, Modal } from "@mantine/core";
+import { AddProductModal } from "../../components/AddProductModal";
 
 export default function Product() {
   const [listOfCategory, setListOfCategory] = useState<any>([]);
@@ -16,6 +18,7 @@ export default function Product() {
   const [productPrice, setProductPrice] = useState<number>(0);
   const [productCategory, setProductCategory] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   async function getProducts() {
     const data = await getAllProducts();
@@ -81,60 +84,10 @@ export default function Product() {
   return (
     <div>
       <h1>Product</h1>
-      <div className="my-4 mx-4">
-        <input
-          type="text"
-          placeholder="Enter Product Name"
-          value={productName}
-          onChange={(e) => setProductName(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Enter Product Description"
-          value={productDescription}
-          onChange={(e) => setProductDescription(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Enter Product Price"
-          value={productPrice}
-          onChange={(e) => {
-            console.log(e.target.value);
-            setProductPrice(+e.target.value);
-          }}
-        />
-        <select
-          value={productCategory}
-          onChange={(e) => {
-            setProductCategory(e.target.value);
-          }}
-        >
-          {listOfCategory.map((category: any) => (
-            <option key={category._id} value={category._id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-        {/* <div className="input-group">
-          <input id="file" type="file" onChange={handleFileChange} />
-        </div> */}
-        {isEditMode ? (
-          <button
-            className="bg-green-500 text-white px-2 py-1 rounded-md"
-            onClick={handleUpdateProduct}
-          >
-            Edit Product
-          </button>
-        ) : (
-          <button
-            onClick={handleAddProduct}
-            className="bg-blue-500 text-white px-2 py-1 rounded-md"
-          >
-            Add Product
-          </button>
-        )}
-      </div>
 
+      <Button variant="filled" onClick={() => setIsModalOpen(true)}>
+        Open Add Product Modal
+      </Button>
       <table className="border border-1 border-solid border-slate-300 rounded-md w-full text-center">
         <thead>
           <tr className="p-2">
@@ -167,6 +120,71 @@ export default function Product() {
           ))}
         </tbody>
       </table>
+      <Modal
+        opened={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+        }}
+        title="Create new product"
+      >
+        <div className="my-4 mx-4">
+          <input
+            type="text"
+            placeholder="Enter Product Name"
+            value={productName}
+            onChange={(e) => setProductName(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Enter Product Description"
+            value={productDescription}
+            onChange={(e) => setProductDescription(e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Enter Product Price"
+            value={productPrice}
+            onChange={(e) => {
+              console.log(e.target.value);
+              setProductPrice(+e.target.value);
+            }}
+          />
+          <select
+            value={productCategory}
+            onChange={(e) => {
+              setProductCategory(e.target.value);
+            }}
+          >
+            {listOfCategory.map((category: any) => (
+              <option key={category._id} value={category._id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+          {/* <div className="input-group">
+          <input id="file" type="file" onChange={handleFileChange} />
+        </div> */}
+          {isEditMode ? (
+            <button
+              className="bg-green-500 text-white px-2 py-1 rounded-md"
+              onClick={handleUpdateProduct}
+            >
+              Edit Product
+            </button>
+          ) : (
+            <button
+              onClick={handleAddProduct}
+              className="bg-blue-500 text-white px-2 py-1 rounded-md"
+            >
+              Add Product
+            </button>
+          )}
+        </div>
+      </Modal>
+      {/* <AddProductModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+      /> */}
     </div>
   );
 }
