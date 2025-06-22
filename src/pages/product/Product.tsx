@@ -8,6 +8,7 @@ import {
 } from "../../api/product";
 import { Button, Modal } from "@mantine/core";
 import { AddProductModal } from "../../components/AddProductModal";
+import { FileInput } from "@mantine/core";
 
 export default function Product() {
   const [listOfCategory, setListOfCategory] = useState<any>([]);
@@ -17,8 +18,10 @@ export default function Product() {
   const [productDescription, setProductDescription] = useState("");
   const [productPrice, setProductPrice] = useState<number>(0);
   const [productCategory, setProductCategory] = useState("");
+  const [productImageUrl, setProductImageUrl] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formError, setIsFormError] = useState("");
 
   async function getProducts() {
     const data = await getAllProducts();
@@ -64,22 +67,38 @@ export default function Product() {
 
   async function handleAddProduct() {
     console.log(productCategory, productName, productDescription, productPrice);
+
+    if (
+      productName.length === 0 ||
+      productDescription.length === 0 ||
+      productPrice === 0 ||
+      productCategory.length === 0
+    ) {
+      setIsFormError("please fill all the fields");
+      return;
+    }
+
     await createNewProduct({
       name: productName,
       description: productDescription,
       price: productPrice,
       category: productCategory,
+      imageUrl: productImageUrl,
     });
+
     console.log("created successfully");
+    setIsModalOpen(false);
   }
 
-  // async function handleFileChange(e: any) {
-  //   const file = e.target.files[0];
-  //   const formData = new FormData();
-  //   formData.append("file", file);
-  //   const data = await uploadProductImage(formData);
-  //   console.log(data);
-  // }
+  async function handleFileChange(file: any) {
+    // console.log(e, "files");
+    // const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    const data = await uploadProductImage(formData);
+    console.log(data);
+    setProductImageUrl(data.filename);
+  }
 
   return (
     <div>
@@ -101,7 +120,18 @@ export default function Product() {
         <tbody>
           {listOfProduct.map((product: any) => (
             <tr key={product._id} className="p-2">
-              <td>{product.name}</td>
+              <td className="flex items-center">
+                <img
+                  src={
+                    product?.imageUrl.length > 0
+                      ? product?.imageUrl
+                      : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1200px-No-Image-Placeholder.svg.png"
+                  }
+                  alt="product-image"
+                  className="w-20 h-20 p-2"
+                />
+                {product.name}
+              </td>
               <td>{product.description}</td>
               <td>{product.price}</td>
               <td>{product?.category?.name}</td>
@@ -127,6 +157,7 @@ export default function Product() {
         }}
         title="Create new product"
       >
+        <div className="text-red-400 text-sm my-4">{formError}</div>
         <div className="my-4 mx-4">
           <input
             type="text"
@@ -134,12 +165,14 @@ export default function Product() {
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
           />
+
           <input
             type="text"
             placeholder="Enter Product Description"
             value={productDescription}
             onChange={(e) => setProductDescription(e.target.value)}
           />
+
           <input
             type="number"
             placeholder="Enter Product Price"
@@ -161,6 +194,13 @@ export default function Product() {
               </option>
             ))}
           </select>
+
+          <FileInput
+            label="Select product image"
+            placeholder="Input placeholder"
+            onChange={handleFileChange}
+          />
+
           {/* <div className="input-group">
           <input id="file" type="file" onChange={handleFileChange} />
         </div> */}

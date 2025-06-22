@@ -1,9 +1,10 @@
 interface Product {
-  _id: string;
+  _id?: string;
   name: string;
   description: string;
   price: number;
   category: string;
+  imageUrl?: string;
 }
 
 export async function createNewProduct(product: Product) {
@@ -17,6 +18,7 @@ export async function createNewProduct(product: Product) {
       description: product.description,
       price: product.price,
       category: product.category,
+      imageUrl: product.imageUrl,
     }),
   });
 }
