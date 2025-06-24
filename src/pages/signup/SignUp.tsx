@@ -1,16 +1,13 @@
 import { Button, PasswordInput, TextInput } from "@mantine/core";
-import { useNavigate } from "react-router";
 import { useForm } from "@mantine/form";
-import { login } from "../../api/auth";
+import { signUp } from "../../api/auth";
+import { useNavigate } from "react-router";
 
-const USER = {
-  email: "admin@gmail.com",
-  password: "admin",
-};
-
-export default function Login() {
+export default function SignUp() {
   const form = useForm({
     initialValues: {
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
     },
@@ -18,20 +15,29 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const handleLogin = async (values: any) => {
-    await login(values);
-    // if (values.email === USER.email && values.password === USER.password) {
-    //   localStorage.setItem("token", "1234");
-    //   navigate("/dashboard");
-    // } else {
-    //   console.log("error");
-    // }
-  };
+  async function handleSignUp(values: any) {
+    await signUp(values);
+    navigate("/login");
+  }
 
   return (
-    <div className="p-32">
-      <h1 className="text-2xl">Login</h1>
-      <form onSubmit={form.onSubmit(handleLogin)}>
+    <div className="p-60">
+      <form onSubmit={form.onSubmit(handleSignUp)}>
+        <TextInput
+          label="First name"
+          placeholder="Enter your email"
+          className="my-3"
+          key={form.key("firstName")}
+          {...form.getInputProps("firstName")}
+        />
+        <TextInput
+          label="Last name"
+          placeholder="Enter your email"
+          className="my-3"
+          key={form.key("lastName")}
+          {...form.getInputProps("lastName")}
+        />
+
         <TextInput
           label="Email"
           placeholder="Enter your email"
