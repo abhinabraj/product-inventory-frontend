@@ -19,13 +19,14 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (values: any) => {
-    await login(values);
-    // if (values.email === USER.email && values.password === USER.password) {
-    //   localStorage.setItem("token", "1234");
-    //   navigate("/dashboard");
-    // } else {
-    //   console.log("error");
-    // }
+    const response = await login(values);
+    console.log(response, "@response");
+    if (response.accessToken.length) {
+      localStorage.setItem("token", response.accessToken);
+      navigate("/dashboard");
+    } else {
+      console.log("cannot login");
+    }
   };
 
   return (

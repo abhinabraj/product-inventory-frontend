@@ -7,6 +7,8 @@ interface Product {
   imageUrl?: string;
 }
 
+const accessToken = localStorage.getItem("token") ?? "";
+
 export async function createNewProduct(product: Product) {
   await fetch("http://localhost:8000/product", {
     method: "POST",
@@ -24,7 +26,11 @@ export async function createNewProduct(product: Product) {
 }
 
 export async function getAllProducts() {
-  const response = await fetch("http://localhost:8000/product");
+  const response = await fetch("http://localhost:8000/product", {
+    headers: {
+      authorization: accessToken,
+    },
+  });
   const data = await response.json();
   return data;
 }
