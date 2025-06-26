@@ -14,13 +14,28 @@ export default function Login() {
       email: "",
       password: "",
     },
+    validate: {
+      email: function (value) {
+        if (/^\S+@\S+$/.test(value)) {
+          return null;
+        } else {
+          return "email cannot be empty";
+        }
+      },
+      password: function (value) {
+        if (value.length) {
+          return null;
+        } else {
+          return "Password cannot be empty";
+        }
+      },
+    },
   });
 
   const navigate = useNavigate();
 
   const handleLogin = async (values: any) => {
     const response = await login(values);
-    console.log(response, "@response");
     if (response.accessToken.length) {
       localStorage.setItem("token", response.accessToken);
       navigate("/dashboard");

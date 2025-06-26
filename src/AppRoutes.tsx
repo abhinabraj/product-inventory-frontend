@@ -20,8 +20,8 @@ export default function AppRoutes() {
         <Route path="users" element={<Users />} />
         <Route path="category" element={<Category />} />
       </Route>
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<SignUp />} />
+      <Route path="/login" element={<AuthComponent Component={Login} />} />
+      <Route path="/signup" element={<AuthComponent Component={SignUp} />} />
 
       {/* <Route path="/login" element={<AuthComponent Component={Login} />} />
       <Route path="/signup" element={<AuthComponent Component={Login} />} /> */}
