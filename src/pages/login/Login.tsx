@@ -2,6 +2,7 @@ import { Button, PasswordInput, TextInput } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { useForm } from "@mantine/form";
 import { login } from "../../api/auth";
+import { useState } from "react";
 
 const USER = {
   email: "admin@gmail.com",
@@ -9,6 +10,7 @@ const USER = {
 };
 
 export default function Login() {
+  const [error, setError] = useState("");
   const form = useForm({
     initialValues: {
       email: "",
@@ -35,18 +37,26 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (values: any) => {
-    const response = await login(values);
-    if (response.accessToken.length) {
-      localStorage.setItem("token", response.accessToken);
-      navigate("/dashboard");
-    } else {
-      console.log("cannot login");
+    try {
+      const response = await login(values);
+      if (response.accessToken.length) {
+        localStorage.setItem("token", response.accessToken);
+        navigate("/dashboard");
+      } else {
+        console.log("cannot login");
+      }
+    } catch (error) {
+      setError("Invalid email or password");
+      console.log(error, "@error from catch");
+    } finally {
+      console.log("finally block executed");
     }
   };
 
   return (
     <div className="p-32">
       <h1 className="text-2xl">Login</h1>
+      {error && <div className="text-red-500">{error}</div>}
       <form onSubmit={form.onSubmit(handleLogin)}>
         <TextInput
           label="Email"
