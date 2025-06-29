@@ -47,8 +47,8 @@ export default function SignUp() {
         />
 
         <PasswordInput
-          label="Input label"
-          placeholder="Input placeholder"
+          label="Password"
+          placeholder="password"
           className="my-3"
           key={form.key("password")}
           {...form.getInputProps("password")}
