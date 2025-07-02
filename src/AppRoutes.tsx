@@ -13,7 +13,7 @@ export default function AppRoutes() {
     <Routes>
       <Route
         path="/dashboard"
-        element={<PrivateComponent Component={Dashboard} />}
+        element={<Dashboard />}
         // element={<Dashboard />}
       >
         <Route path="product" element={<Product />} />

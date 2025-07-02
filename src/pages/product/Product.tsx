@@ -9,6 +9,7 @@ import {
 import { Button, Modal } from "@mantine/core";
 import { AddProductModal } from "../../components/AddProductModal";
 import { FileInput } from "@mantine/core";
+import useStore from "../../store";
 
 export default function Product() {
   const [listOfCategory, setListOfCategory] = useState<any>([]);
@@ -22,6 +23,8 @@ export default function Product() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formError, setIsFormError] = useState("");
+
+  const addToCart = useStore((state) => state.addToCart);
 
   async function getProducts() {
     const data = await getAllProducts();
@@ -144,6 +147,9 @@ export default function Product() {
                 </button>
                 <button className="bg-red-500 text-white px-2 py-1 rounded-md">
                   delete
+                </button>
+                <button className="bg-blue-500 text-white px-2 py-1 rounded-md" onClick={() => addToCart(product)}>
+                  Add to cart
                 </button>
               </td>
             </tr>
